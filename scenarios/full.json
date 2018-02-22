@@ -1,0 +1,13 @@
+{ 
+  "noEscape": true,
+  "name": "test",
+  "description": "A Weex project",
+  "author": "CircleCI",
+  "router": false,
+  "lint": true,
+  "lintConfig": "standard",
+  "unit": true,
+  "runner": "karma",
+  "e2e": true,
+  "autoInstall": false
+}
