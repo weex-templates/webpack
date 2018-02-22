@@ -23,6 +23,14 @@ const config = {
       aggregateTimeout: 300,
       poll: false
     },
+    {{#lint}}// Use Eslint Loader?
+    // If true, your code will be linted during bundling and
+    // linting errors and warnings will be shown in the console.
+    useEslint: true,
+    // If true, eslint errors and warnings will also be shown in the error overlay
+    // in the browser.
+    showEslintErrorsInOverlay: false,
+    {{/lint}}
     /**
      * Source Maps
      */
@@ -61,9 +69,11 @@ const config = {
         `
     }
   },
+  {{#if_eq unit}}
   test: {
     env: JSON.stringify('test')
   },
+  {{/if_eq}}
   prod: {
     env: JSON.stringify('production'),
     /**

@@ -130,8 +130,8 @@ exports.printMessage = function printMessage(data, { green, yellow }) {
     });
   });
   console.log(`\nTo get started:\n`);
-  console.log(yellow(`  cd ${path.basename(dir)}`));
-  console.log(yellow(`  npm start`));
+  console.log(yellow(`  cd ${data.destDirName}`));
+  console.log(yellow(`  ${data.autoInstall ? '' : 'npm install && '}npm start`));
   console.log(`\nEnjoy your hacking time!`);
 }
 

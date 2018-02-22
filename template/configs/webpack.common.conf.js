@@ -60,6 +60,17 @@ const getEntryFile = (dir) => {
   });
 }
 
+{{#lint}}const createLintingRule = () => ({
+  test: /\.(js|vue)$/,
+  loader: 'eslint-loader',
+  enforce: 'pre',
+  include: [resolve('src'), resolve('test')],
+  options: {
+    formatter: require('eslint-friendly-formatter'),
+    emitWarning: !config.dev.showEslintErrorsInOverlay
+  }
+}){{/lint}}
+
 // Generate an entry file array before writing a webpack configuration
 getEntryFile();
 /**
@@ -95,7 +106,10 @@ const webConfig = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      '@': helper.resolve('src'),
+      {{#if_eq build "weexcore"}}
+      'weex$': 'weex-vue-render/dist/index.core',
+      {{/if_eq}}
+      '@': helper.resolve('src')
     }
   },
   /*
@@ -105,32 +119,36 @@ const webConfig = {
    */
   module: {
     // webpack 2.0 
-    rules: [{
-      test: /\.js$/,
-      use: [{
-        loader: 'babel-loader'
-      }],
-      exclude: /node_modules(?!(\/|\\).*(weex).*)/
-    },
-    {
-      test: /\.vue(\?[^?]+)?$/,
-      use: [{
-        loader: 'vue-loader',
-        options: Object.assign(vueLoaderConfig({useVue: true, usePostCSS: false}), {
-          /**
-           * important! should use postTransformNode to add $processStyle for
-           * inline style prefixing.
-           */
-          optimizeSSR: false,
-          compilerModules: [{
-            postTransformNode: el => {
-              el.staticStyle = `$processStyle(${el.staticStyle})`
-              el.styleBinding = `$processStyle(${el.styleBinding})`
-            }
-          }]
-        })
-      }]
-    }
+    rules: [
+      {{#lint}}
+      ...(config.dev.useEslint ? [createLintingRule()] : []),
+      {{/lint}}
+      {
+        test: /\.js$/,
+        use: [{
+          loader: 'babel-loader'
+        }],
+        exclude: /node_modules(?!(\/|\\).*(weex).*)/
+      },
+      {
+        test: /\.vue(\?[^?]+)?$/,
+        use: [{
+          loader: 'vue-loader',
+          options: Object.assign(vueLoaderConfig({useVue: true, usePostCSS: false}), {
+            /**
+             * important! should use postTransformNode to add $processStyle for
+             * inline style prefixing.
+             */
+            optimizeSSR: false,
+            compilerModules: [{
+              postTransformNode: el => {
+                el.staticStyle = `$processStyle(${el.staticStyle})`
+                el.styleBinding = `$processStyle(${el.styleBinding})`
+              }
+            }]
+          })
+        }]
+      }
     ]
   },
   /*
@@ -153,19 +171,21 @@ const weexConfig = {
    * See: http://webpack.github.io/docs/configuration.html#module
    */
   module: {
-    rules: [{
-      test: /\.js$/,
-      use: [{
-        loader: 'babel-loader'
-      }]
-    },
-    {
-      test: /\.vue(\?[^?]+)?$/,
-      use: [{
-        loader: 'weex-loader',
-        options: vueLoaderConfig({useVue: false})
-      }]
-    }]
+    rules: [
+      {
+        test: /\.js$/,
+        use: [{
+          loader: 'babel-loader'
+        }]
+      },
+      {
+        test: /\.vue(\?[^?]+)?$/,
+        use: [{
+          loader: 'weex-loader',
+          options: vueLoaderConfig({useVue: false})
+        }]
+      }
+    ]
   },
   /*
    * Add additional plugins to the compiler.

@@ -131,11 +131,11 @@ module.exports = {
     },
   },
   filters: {
-    '.eslintrc.js': 'lint',
+    '.eslintrc': 'lint',
     '.eslintignore': 'lint',
     'configs/webpack.test.conf.js': 'unit',
     'build/webpack.test.conf.js': "unit && runner === 'karma'",
-    'test/test/**/*': 'unit',
+    'test/**/*': 'unit',
     'src/router/**/*': 'router'
   },
   complete: function(data, { chalk }) {

@@ -1,7 +1,6 @@
-# do not lint test case source files
-node_modules
-dist
-.temp
-web/build
-platforms
-plugins
+/configs/
+/dist/
+/*.js
+{{#unit}}
+/test/unit/coverage/
+{{/unit}}
