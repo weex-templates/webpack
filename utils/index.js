@@ -66,21 +66,73 @@ exports.runLintFix = function runLintFix(cwd, data, color) {
  * @param {Object} data Data from questionnaire.
  */
 exports.printMessage = function printMessage(data, { green, yellow }) {
-  const message = `
-# ${green('Project initialization finished!')}
-# ========================
-
-To get started:
-
-  ${yellow(
-    `${data.inPlace ? '' : `cd ${data.destDirName}\n  `}${installMsg(
-      data
-    )}${lintMsg(data)}npm run dev`
-  )}
-  
-Documentation can be found at https://vuejs-templates.github.io/webpack
-`
-  console.log(message)
+  const commandsWithDesc = [
+    {
+      name: 'npm start',
+      desc: [
+        'Starts the development server for you to preview your weex page on browser',
+        'You can also scan the QR code using weex playground to preview weex page on native'
+      ]
+    },
+    {
+      name: 'npm run dev',
+      desc: [
+        'Open the code compilation task in watch mode'
+      ]
+    },
+    {
+      name: 'npm run ios',
+      desc: [
+        '(Mac only, requires Xcode)',
+        'Starts the development server and loads your app in an iOS simulator'
+      ]
+    },
+    {
+      name: 'npm run android',
+      desc: [
+        '(Requires Android build tools)',
+        'Starts the development server and loads your app on a connected Android device or emulator'
+      ]
+    },
+    {
+      name: 'npm run pack:ios',
+      desc: [
+        '(Mac only, requires Xcode)',
+        'Packaging ios project into ipa package'
+      ]
+    },
+    {
+      name: 'npm run pack:android',
+      desc: [
+        '(Requires Android build tools)',
+        'Packaging android project into apk package'
+      ]
+    },
+    {
+      name: 'npm run pack:web',
+      desc: [
+        'Packaging html5 project into `web/build` folder'
+      ]
+    },
+    {
+      name: 'npm run test',
+      desc: [
+        'Starts the test runner'
+      ]
+    }
+  ];
+  console.log(`\n${green(`Success! Created ${data.destDirName} at ${path.resolve(data.destDirName)}`)}`)
+  console.log(`\nInside that directory, you can run several commands:\n`)
+  commandsWithDesc.forEach(c => {
+    console.log(`\n  ${yellow(c.name)}`)
+    c.desc.forEach(d => {
+      console.log(`  ${d}`)
+    });
+  });
+  console.log(`\nTo get started:\n`);
+  console.log(yellow(`  cd ${path.basename(dir)}`));
+  console.log(yellow(`  npm start`));
+  console.log(`\nEnjoy your hacking time!`);
 }
 
 /**

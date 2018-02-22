@@ -1,8 +1,9 @@
 {
-  "name": "weex",
-  "version": "0.0.0",
-  "description": "A weex project",
-  "main": "index.js",
+  "name": "{{ name }}",
+  "version": "1.0.0",
+  "description": "{{ description }}",
+  "author": "{{ author }}",
+  "private": true,
   "scripts": {
     "start": "npm run serve",
     "build": "webpack --env.NODE_ENV=common",
@@ -11,7 +12,9 @@
     "clean": "rimraf ./web/build",
     "dev": "webpack --env.NODE_ENV=common --progress --watch",
     "unit": "karma start test/unit/karma.conf.js",
+    "unit": "cross-env BABEL_ENV=test karma start test/unit/karma.conf.js --single-run",
     "test": "npm run unit",
+    "lint": "eslint --ext .js,.vue src{{#unit}} test/unit{{/unit}}{{#e2e}} test/e2e/specs{{/e2e}}",
     "lint": "eslint --ext .js,.vue src",
     "serve": "webpack-dev-server --env.NODE_ENV=development --progress",
     "ios": "weex run ios",
