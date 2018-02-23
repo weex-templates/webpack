@@ -142,7 +142,7 @@ const devWebpackConfig = webpackMerge(commonConfig[0], {
     : false,
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
-    openPage: config.dev.openPage,
+    openPage: openPage,
     watchOptions: config.dev.watchOptions
   }
 });

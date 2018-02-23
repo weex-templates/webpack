@@ -54,14 +54,19 @@
       }
       if (page) {
         var $preview = document.querySelector('#preview')
-        $preview.src = `/${page.replace('.js', '')}.html`;
+        $preview.src = `/${page.replace('.js', '.html')}`;
       }
       if (entrys) {
         var pageEntrys = JSON.parse(decodeURI(entrys));
         var $pages = document.querySelector('.pages-box');
         var contents = '';
         pageEntrys.forEach(function(entry){
-          contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item">${entry}</a>`
+          if (entry === page.replace('.js', '')) {
+            contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item active">${entry}</a>`
+          }
+          else {
+            contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item">${entry}</a>`
+          }
         })
         $pages.innerHTML = contents;
       }

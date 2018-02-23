@@ -52,7 +52,7 @@ body { display: flex; flex-direction: column; }
 }
 .pages-box {
   max-height: 330px;
-  overflow-y: scroll;
+  overflow-y: auto;
 }
 .pages-box .page-item{
   display: inline-block;
@@ -61,10 +61,16 @@ body { display: flex; flex-direction: column; }
   font-size: 14px;
   border-radius: 5px;
   margin: 10px 5px;
+  color:#717171;
   border:1px solid #ddd;
   transition: all .2s ease;
 }
 .pages-box .page-item:hover{
+  border-color:#0088fb;
+  background: #0088fb;
+  color:#fff;
+}
+.pages-box .page-item.active {
   border-color:#0088fb;
   background: #0088fb;
   color:#fff;
