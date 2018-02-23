@@ -25,7 +25,7 @@ const helper = require('./helper');
 const generateHtmlWebpackPlugin = (entry) => {
   let entrys = Object.keys(entry);
   // exclude vendor entry.
-  entrys = entrys.filter(entry => Object.keys(entry)[0] !== 'vendor' );
+  entrys = entrys.filter(entry => entry !== 'vendor' );
   const htmlPlugin = entrys.map(name => {
     return new HtmlWebpackPlugin({
       filename: name + '.html',

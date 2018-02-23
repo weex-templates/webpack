@@ -1,13 +1,26 @@
 <template>
   <div class="wrapper">
-    <image :src="logo" class="logo"></image>
+    <image :src="logo" class="logo" />
     <text class="greeting">The environment is ready!</text>
-    <text class="message">Now, let's use Vue.js to build your Weex app.</text>
+    {{#router}}
+    <router-view/>
+    {{else}}
+    <HelloWorld/>
+    {{/router}}
   </div>
 </template>
 
 <script>
+  {{#unless router}}
+  import HelloWorld from './components/HelloWorld'
+  {{/unless}}
   export default {
+    name: 'App',
+    {{#router}}{{else}}
+    components: {
+      HelloWorld
+    }
+    {{/router}}
     data () {
       return {
         logo: 'https://gw.alicdn.com/tfs/TB1yopEdgoQMeJjy1XaXXcSsFXa-640-302.png',
@@ -26,6 +39,7 @@
     height: 200px;
   }
   .greeting {
+    text-align: center;
     margin-top: 70px;
     font-size: 50px;
     color: #41B883;

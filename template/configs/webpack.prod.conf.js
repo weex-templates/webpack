@@ -24,7 +24,7 @@ const ScriptExtHtmlWebpackPlugin = require('script-ext-html-webpack-plugin');
 const generateMultipleEntrys = (entry) => {
   let entrys = Object.keys(entry);
   // exclude vendor entry.
-  entrys = entrys.filter(entry => Object.keys(entry)[0] !== 'vendor' );
+  entrys = entrys.filter(entry => entry !== 'vendor' );
   const htmlPlugin = entrys.map(name => {
     return new HtmlWebpackPlugin({
       filename: name + '.html',

@@ -24,7 +24,7 @@ module.exports = {
       if (v1 || v2) {
         return options.fn(this)
       }
-
+      console.log(Object.keys(options))
       return options.inverse(this)
     },
     template_version() {
@@ -51,28 +51,56 @@ module.exports = {
       type: 'string',
       message: 'Author',
     },
-    build: {
+    weex: {
       when: 'isNotTest',
       type: 'list',
       message: 'weex build',
       choices: [
         {
-          name: 'weex-vue-render: recommended for most users',
-          value: 'weexvuerender',
-          short: 'weexvuerender',
+          name: '0.12.17 LTS: recommended for most users',
+          value: 'lts',
+          short: 'lts',
         },
         {
           name:
-            'weexcore: about 6KB lighter min+gzip, but you need to install other component you need in your entry file. (such as weex-vue-slider)',
-          value: 'weexcore',
-          short: 'weexcore',
+            '1.0.17 Current: latest features',
+          value: 'latest',
+          short: 'latest',
         }
+      ],
+    },
+    babel: {
+      when: 'isNotTest',
+      type: 'list',
+      message: 'babel compiler (https://babeljs.io/docs/plugins/#stage-x-experimental-presets)',
+      choices: [
+        {
+          name: 'stage-0: recommended for most users, support you to use all es6 syntax',
+          value: 'stage0',
+          short: 'stage0',
+        },
+        {
+          name: 'stage-1',
+          value: 'stage1',
+          short: 'stage1',
+        },
+        {
+          name: 'stage-2',
+          value: 'stage2',
+          short: 'stage2',
+        },
+        {
+          name: 'stage-3',
+          value: 'stage3',
+          short: 'stage3',
+        },
       ],
     },
     router: {
       when: 'isNotTest',
       type: 'confirm',
-      message: 'Install vue-router?',
+      message: 'Use vue-router to manage your view router? (not recommended)',
+      default: false
     },
     lint: {
       when: 'isNotTest',
@@ -131,7 +159,7 @@ module.exports = {
     },
   },
   filters: {
-    '.eslintrc': 'lint',
+    '.eslintrc.js': 'lint',
     '.eslintignore': 'lint',
     'configs/webpack.test.conf.js': 'unit',
     'build/webpack.test.conf.js': "unit && runner === 'karma'",

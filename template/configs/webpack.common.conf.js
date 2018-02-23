@@ -1,19 +1,26 @@
 const path = require('path');
 const fs = require('fs-extra');
 const webpack = require('webpack');
-const webEntry = {};
-const weexEntry = {};
 const config = require('./config');
 const helper = require('./helper');
 const vueLoaderConfig = require('./vue-loader.conf');
 const vueWebTemp = helper.rootNode(config.templateDir);
 const hasPluginInstalled = fs.existsSync(helper.rootNode(config.pluginFilePath));
 const isWin = /^win/.test(process.platform);
+{{#router}}
+const weexEntry = {
+  'index': helper.root('entry.js')
+}
+{{else}}
+const webEntry = {};
+const weexEntry = {};
+{{/router}}
 
+{{#router}}
 // Wraping the entry file for web.
 const getEntryFileContent = (entryPath, vueFilePath) => {
   let relativeVuePath = path.relative(path.join(entryPath, '../'), vueFilePath);
-  let relativeEntryPath = helper.rootNode(config.entryFilePath);
+  let relativeEntryPath = helper.root(config.entryFilePath);
   let relativePluginPath = helper.rootNode(config.pluginFilePath);
 
   let contents = '';
@@ -30,9 +37,7 @@ const getEntryFileContent = (entryPath, vueFilePath) => {
     contents = ''
   }
   contents += `\nconst App = require('${relativeVuePath}');\n`;
-  contents += `App.el = '#root';\n`;
-  contents += `new Vue(App);\n`;
-  // console.log(entryContents)
+  contents += `new Vue(Vue.util.extend({el: '#root'}, App));\n`;
   return entryContents + contents;
 }
 
@@ -48,8 +53,8 @@ const getEntryFile = (dir) => {
       const name = path.join(dir, path.basename(file, extname));
       if (extname === '.vue') {
         const entryFile = path.join(vueWebTemp, dir, path.basename(file, extname) + '.js');
-        fs.outputFileSync(path.join(entryFile), getEntryFileContent(entryFile, fullpath));
-        webEntry[name] = path.join(entryFile) + '?entry=true';
+        fs.outputFileSync(entryFile, getEntryFileContent(entryFile, fullpath));
+        webEntry[name] = entryFile;
       }
       weexEntry[name] = fullpath + '?entry=true';
     }
@@ -60,19 +65,70 @@ const getEntryFile = (dir) => {
   });
 }
 
+// Generate an entry file array before writing a webpack configuration
+getEntryFile();
+
+{{else}}
+const getEntryFileContent = (source, routerpath) => {
+  const dependence = `import Vue from 'vue\n`;
+  dependence += `import weex from 'weex-vue-render'\n`;
+  let relativePluginPath = helper.rootNode(config.pluginFilePath);
+  let entryContents = fs.readFileSync(source).toString();
+  let contents = '';
+  entryContents = dependence + entryContents;
+  entryContents = entryContents.replace(/\/\* weex initialized/, match => `weex.init(Vue)\n${match}`);
+  if (isWin) {
+    relativePluginPath = relativePluginPath.replace(/\\/g, '\\\\');
+  }
+  if (hasPluginInstalled) {
+    contents += `\n// If detact plugins/plugin.js is exist, import and the plugin.js\n`;
+    contents += `import plugins from '${relativePluginPath}';\n`;
+    contents += `plugins.forEach(function (plugin) {\n\tweex.install(plugin)\n});\n\n`;
+    entryContents = entryContents.replace(/\.\/router/, routerpath);
+    entryContents = entryContents.replace(/weex\.init/, match => `${contents}${match}`);
+  }
+  return entryContents;
+}
+
+const getRouterFileContent = (source) => {
+  const dependence = `import Vue from 'vue'\n`;
+  let routerContents = fs.readFileSync(source).toString();
+  routerContents = dependence + routerContents;
+  return routerContents;
+}
+
+const getEntryFile = () => {
+  const entryFile = path.join(vueWebTemp, config.entryFilePath)
+  const routerFile = path.join(vueWebTemp, config.routerFilePath)
+  fs.outputFileSync(entryFile, getEntryFileContent(helper.root(config.entryFilePath), routerFile));
+  fs.outputFileSync(routerFile, getRouterFileContent(helper.root(config.routerFilePath)));
+  return {
+    index: entryFile
+  }
+}
+
+// The entry file for web needs to add some library. such as vue, weex-vue-render
+// 1. src/entry.js 
+// import Vue from 'vue';
+// import weex from 'weex-vue-render';
+// weex.init(Vue);
+// 2. src/router/index.js
+// import Vue from 'vue'
+const webEntry = getEntryFile();
+{{/router}}
+
+
 {{#lint}}const createLintingRule = () => ({
   test: /\.(js|vue)$/,
   loader: 'eslint-loader',
   enforce: 'pre',
-  include: [resolve('src'), resolve('test')],
+  include: [helper.rootNode('src'), helper.rootNode('test')],
   options: {
     formatter: require('eslint-friendly-formatter'),
     emitWarning: !config.dev.showEslintErrorsInOverlay
   }
 }){{/lint}}
 
-// Generate an entry file array before writing a webpack configuration
-getEntryFile();
 /**
  * Plugins for webpack configuration.
  */
@@ -106,9 +162,6 @@ const webConfig = {
   resolve: {
     extensions: ['.js', '.vue', '.json'],
     alias: {
-      {{#if_eq build "weexcore"}}
-      'weex$': 'weex-vue-render/dist/index.core',
-      {{/if_eq}}
       '@': helper.resolve('src')
     }
   },
@@ -140,12 +193,37 @@ const webConfig = {
              * inline style prefixing.
              */
             optimizeSSR: false,
+            {{#if_eq weex "latest"}}
+            postcss: [
+              // to convert weex exclusive styles.
+              require('postcss-plugin-weex')(),
+              require('autoprefixer')({
+                browsers: ['> 0.1%', 'ios >= 8', 'not ie < 12']
+              }),
+              require('postcss-plugin-px2rem')({
+                // base on 750px standard.
+                rootValue: 75,
+                // to leave 1px alone.
+                minPixelValue: 1.01
+              })
+            ],
+            compilerModules: [
+              {
+                postTransformNode: el => {
+                  // to convert vnode for weex components.
+                  require('weex-vue-precompiler')()(el)
+                }
+              }
+            ]
+            {{else}}
             compilerModules: [{
               postTransformNode: el => {
                 el.staticStyle = `$processStyle(${el.staticStyle})`
                 el.styleBinding = `$processStyle(${el.styleBinding})`
               }
             }]
+            {{/if_eq}}
+            
           })
         }]
       }
@@ -164,6 +242,16 @@ const weexConfig = {
   output: {
     path: path.join(__dirname, '../dist'),
     filename: '[name].js'
+  },
+  /**
+   * Options affecting the resolving of modules.
+   * See http://webpack.github.io/docs/configuration.html#resolve
+   */
+  resolve: {
+    extensions: ['.js', '.vue', '.json'],
+    alias: {
+      '@': helper.resolve('src')
+    }
   },
   /*
    * Options affecting the resolving of modules.

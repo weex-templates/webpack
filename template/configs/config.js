@@ -6,9 +6,13 @@ const config = {
   // webpack-dev-server
   pluginConfigPath: 'plugins/plugins.json',
   pluginFilePath: 'plugins/plugins.js',
+  // router
+  {{#router}}
+  routerFilePath: 'router.js',
+  {{/router}}
   // common
   templateDir: '.temp',
-  entryFilePath: './src/entry.js',
+  entryFilePath: 'entry.js',
   dev: {
     // Various Dev Server settings
     contentBase: ROOT,
@@ -69,11 +73,11 @@ const config = {
         `
     }
   },
-  {{#if_eq unit}}
+  {{#unit}}
   test: {
     env: JSON.stringify('test')
   },
-  {{/if_eq}}
+  {{/unit}}
   prod: {
     env: JSON.stringify('production'),
     /**
