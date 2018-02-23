@@ -1,16 +1,16 @@
 {
   "presets": [
     "es2015",
-    {{#if_eq babel "stage0"}}
+    {{#if_eq babel "stage-0"}}
     "stage-0"
     {{/if_eq}}
-    {{#if_eq babel "stage1"}}
+    {{#if_eq babel "stage-1"}}
     "stage-1"
     {{/if_eq}}
-    {{#if_eq babel "stage2"}}
+    {{#if_eq babel "stage-2"}}
     "stage-2"
     {{/if_eq}}
-    {{#if_eq babel "stage3"}}
+    {{#if_eq babel "stage-3"}}
     "stage-3"
     {{/if_eq}}
   ]

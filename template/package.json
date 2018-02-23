@@ -45,16 +45,16 @@
   },
   "devDependencies": {
     "babel-loader": "^7.1.1",
-    {{#if_eq babel "stage0"}}
+    {{#if_eq babel "stage-0"}}
     "babel-preset-stage-0": "^6.24.1",
     {{/if_eq}}
-    {{#if_eq babel "stage1"}}
+    {{#if_eq babel "stage-1"}}
     "babel-preset-stage-1": "^6.24.1",
     {{/if_eq}}
-    {{#if_eq babel "stage2"}}
+    {{#if_eq babel "stage-2"}}
     "babel-preset-stage-2": "^6.24.1",
     {{/if_eq}}
-    {{#if_eq babel "stage3"}}
+    {{#if_eq babel "stage-3"}}
     "babel-preset-stage-3": "^6.24.1",
     {{/if_eq}}
     {{#lint}}

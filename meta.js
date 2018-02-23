@@ -76,23 +76,23 @@ module.exports = {
       choices: [
         {
           name: 'stage-0: recommended for most users, support you to use all es6 syntax',
-          value: 'stage0',
-          short: 'stage0',
+          value: 'stage-0',
+          short: 'stage-0',
         },
         {
           name: 'stage-1',
-          value: 'stage1',
-          short: 'stage1',
+          value: 'stage-1',
+          short: 'stage-1',
         },
         {
           name: 'stage-2',
-          value: 'stage2',
-          short: 'stage2',
+          value: 'stage-2',
+          short: 'stage-2',
         },
         {
           name: 'stage-3',
-          value: 'stage3',
-          short: 'stage3',
+          value: 'stage-3',
+          short: 'stage-3',
         },
       ],
     },
