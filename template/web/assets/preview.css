@@ -37,6 +37,8 @@ body { display: flex; flex-direction: column; }
 }
 .qrcode > img {
   display: block;
+  width: 250px;
+  height: 250px;
   margin: 0 auto;
 }
 .qrcode-tips {

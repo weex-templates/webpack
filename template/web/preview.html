@@ -61,7 +61,8 @@
         var $pages = document.querySelector('.pages-box');
         var contents = '';
         pageEntrys.forEach(function(entry){
-          if (entry === page.replace('.js', '')) {
+          console.log(entry, getUrlParam('page'))
+          if (entry === getUrlParam('page').replace('.js', '')) {
             contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item active">${entry}</a>`
           }
           else {
