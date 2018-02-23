@@ -16,6 +16,9 @@ module.exports = env => {
     case 'common':
       webpackConfig = require('./configs/webpack.common.conf');
       break;
+    case 'release':
+      webpackConfig = require('./configs/webpack.release.conf');
+      break;
     case 'dev':
     case 'development':
     default:
