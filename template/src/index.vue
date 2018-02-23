@@ -15,12 +15,10 @@
   import HelloWorld from './components/HelloWorld'
   {{/unless}}
   export default {
-    name: 'App',
-    {{#router}}{{else}}
+    name: 'App',{{#router}}{{else}}
     components: {
       HelloWorld
-    }
-    {{/router}}
+    },{{/router}}
     data () {
       return {
         logo: 'https://gw.alicdn.com/tfs/TB1yopEdgoQMeJjy1XaXXcSsFXa-640-302.png',

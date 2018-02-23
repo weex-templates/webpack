@@ -19,6 +19,29 @@ const utils = require('./utils');
 const helper = require('./helper');
 
 /**
+ * Modify the url that will open on the browser.
+ * @param {Array} entry 
+ */
+const postMessageToOpenPage =  (entry) => {
+  let entrys = Object.keys(entry);
+  let openpage = config.dev.openPage;
+  // exclude vendor entry.
+  entrys = entrys.filter(entry => entry !== 'vendor' );
+  if(entrys.indexOf('index') > -1) {
+    openpage += `?page=index.js`;
+  }
+  else {
+    openpage += `?page=${entrys[0]}.js`;
+  }
+  if(entrys.length > 1) {
+    openpage += `&entrys=${JSON.stringify(entrys)}`
+  }
+  return openpage;
+}
+
+const openPage = postMessageToOpenPage(commonConfig[0].entry);
+
+/**
  * Generate multiple entrys
  * @param {Array} entry 
  */

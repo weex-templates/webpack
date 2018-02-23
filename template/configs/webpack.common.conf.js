@@ -17,6 +17,53 @@ const weexEntry = {};
 {{/router}}
 
 {{#router}}
+const getEntryFileContent = (source, routerpath) => {
+  let dependence = `import Vue from 'vue'\n`;
+  dependence += `import weex from 'weex-vue-render'\n`;
+  let relativePluginPath = helper.rootNode(config.pluginFilePath);
+  let entryContents = fs.readFileSync(source).toString();
+  let contents = '';
+  entryContents = dependence + entryContents;
+  entryContents = entryContents.replace(/\/\* weex initialized/, match => `weex.init(Vue)\n${match}`);
+  if (isWin) {
+    relativePluginPath = relativePluginPath.replace(/\\/g, '\\\\');
+  }
+  if (hasPluginInstalled) {
+    contents += `\n// If detact plugins/plugin.js is exist, import and the plugin.js\n`;
+    contents += `import plugins from '${relativePluginPath}';\n`;
+    contents += `plugins.forEach(function (plugin) {\n\tweex.install(plugin)\n});\n\n`;
+    entryContents = entryContents.replace(/\.\/router/, routerpath);
+    entryContents = entryContents.replace(/weex\.init/, match => `${contents}${match}`);
+  }
+  return entryContents;
+}
+
+const getRouterFileContent = (source) => {
+  const dependence = `import Vue from 'vue'\n`;
+  let routerContents = fs.readFileSync(source).toString();
+  routerContents = dependence + routerContents;
+  return routerContents;
+}
+
+const getEntryFile = () => {
+  const entryFile = path.join(vueWebTemp, config.entryFilePath)
+  const routerFile = path.join(vueWebTemp, config.routerFilePath)
+  fs.outputFileSync(entryFile, getEntryFileContent(helper.root(config.entryFilePath), routerFile));
+  fs.outputFileSync(routerFile, getRouterFileContent(helper.root(config.routerFilePath)));
+  return {
+    index: entryFile
+  }
+}
+
+// The entry file for web needs to add some library. such as vue, weex-vue-render
+// 1. src/entry.js 
+// import Vue from 'vue';
+// import weex from 'weex-vue-render';
+// weex.init(Vue);
+// 2. src/router/index.js
+// import Vue from 'vue'
+const webEntry = getEntryFile();
+{{else}}
 // Wraping the entry file for web.
 const getEntryFileContent = (entryPath, vueFilePath) => {
   let relativeVuePath = path.relative(path.join(entryPath, '../'), vueFilePath);
@@ -67,54 +114,6 @@ const getEntryFile = (dir) => {
 
 // Generate an entry file array before writing a webpack configuration
 getEntryFile();
-
-{{else}}
-const getEntryFileContent = (source, routerpath) => {
-  const dependence = `import Vue from 'vue\n`;
-  dependence += `import weex from 'weex-vue-render'\n`;
-  let relativePluginPath = helper.rootNode(config.pluginFilePath);
-  let entryContents = fs.readFileSync(source).toString();
-  let contents = '';
-  entryContents = dependence + entryContents;
-  entryContents = entryContents.replace(/\/\* weex initialized/, match => `weex.init(Vue)\n${match}`);
-  if (isWin) {
-    relativePluginPath = relativePluginPath.replace(/\\/g, '\\\\');
-  }
-  if (hasPluginInstalled) {
-    contents += `\n// If detact plugins/plugin.js is exist, import and the plugin.js\n`;
-    contents += `import plugins from '${relativePluginPath}';\n`;
-    contents += `plugins.forEach(function (plugin) {\n\tweex.install(plugin)\n});\n\n`;
-    entryContents = entryContents.replace(/\.\/router/, routerpath);
-    entryContents = entryContents.replace(/weex\.init/, match => `${contents}${match}`);
-  }
-  return entryContents;
-}
-
-const getRouterFileContent = (source) => {
-  const dependence = `import Vue from 'vue'\n`;
-  let routerContents = fs.readFileSync(source).toString();
-  routerContents = dependence + routerContents;
-  return routerContents;
-}
-
-const getEntryFile = () => {
-  const entryFile = path.join(vueWebTemp, config.entryFilePath)
-  const routerFile = path.join(vueWebTemp, config.routerFilePath)
-  fs.outputFileSync(entryFile, getEntryFileContent(helper.root(config.entryFilePath), routerFile));
-  fs.outputFileSync(routerFile, getRouterFileContent(helper.root(config.routerFilePath)));
-  return {
-    index: entryFile
-  }
-}
-
-// The entry file for web needs to add some library. such as vue, weex-vue-render
-// 1. src/entry.js 
-// import Vue from 'vue';
-// import weex from 'weex-vue-render';
-// weex.init(Vue);
-// 2. src/router/index.js
-// import Vue from 'vue'
-const webEntry = getEntryFile();
 {{/router}}
 
 

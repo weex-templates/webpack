@@ -164,7 +164,7 @@ module.exports = {
     'configs/webpack.test.conf.js': 'unit',
     'build/webpack.test.conf.js': "unit && runner === 'karma'",
     'test/**/*': 'unit',
-    'src/router/**/*': 'router'
+    'src/router.js': 'router'
   },
   complete: function(data, { chalk }) {
     const green = chalk.green
