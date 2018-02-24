@@ -4,7 +4,7 @@ This boilerplate is targeted towards large, serious projects and assumes you are
 
 ## Quickstart
 
-To use this template, scaffold a project with [weex-toolkit v1.3.0+](https://github.com/weex-team/weex-toolkit).
+To use this template, scaffold a project with [weexpack v1.1.1+](https://github.com/weex-team/weex-pack).
 
 ``` bash
 $ npm install -g weex-toolkit
