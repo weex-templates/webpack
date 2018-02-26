@@ -1,6 +1,7 @@
 const commonConfig = require('./webpack.common.conf');
 const webpackMerge = require('webpack-merge'); // used to merge webpack configs
 
+const os = require('os');
 /**
  * Webpack Plugins
  */
@@ -24,7 +25,7 @@ const weexConfig = webpackMerge(commonConfig[1], {
      * See: https://www.npmjs.com/package/webpack-uglify-parallel
      */
     new UglifyJsparallelPlugin({
-      workers: .cpus().length,
+      workers: os.cpus().length,
       mangle: true,
       compressor: {
         warnings: false,
