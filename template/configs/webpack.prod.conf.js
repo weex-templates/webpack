@@ -32,7 +32,9 @@ const weexConfig = webpackMerge(commonConfig[1], {
         drop_console: true,
         drop_debugger: true
       }
-    })
+    }),
+    // Need to run uglify first, then pipe other webpack plugins
+    ...commonConfig[1].plugins
   ]
 })
 
