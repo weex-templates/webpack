@@ -34,7 +34,7 @@ const postMessageToOpenPage =  (entry) => {
     openpage += `?page=${entrys[0]}.js`;
   }
   if(entrys.length > 1) {
-    openpage += `&entrys=${JSON.stringify(entrys)}`
+    openpage += `&entrys=${entrys.join('|')}`
   }
   return openpage;
 }

@@ -57,11 +57,10 @@
         $preview.src = `/${page.replace('.js', '.html')}`;
       }
       if (entrys) {
-        var pageEntrys = JSON.parse(decodeURI(entrys));
+        var pageEntrys = decodeURI(entrys).replace('\\', '/').split('|');
         var $pages = document.querySelector('.pages-box');
         var contents = '';
         pageEntrys.forEach(function(entry){
-          console.log(entry, getUrlParam('page'))
           if (entry === getUrlParam('page').replace('.js', '')) {
             contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item active">${entry}</a>`
           }

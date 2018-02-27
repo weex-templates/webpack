@@ -126,7 +126,9 @@ getEntryFile();
     formatter: require('eslint-friendly-formatter'),
     emitWarning: !config.dev.showEslintErrorsInOverlay
   }
-}){{/lint}}
+})
+const useEslint = config.dev.useEslint ? [createLintingRule()] : []
+{{/lint}}
 
 /**
  * Plugins for webpack configuration.
@@ -146,10 +148,9 @@ const plugins = [
 
 // Config for compile jsbundle for web.
 const webConfig = {
-  entry: {
-    ...webEntry,
+  entry: Object.assign(webEntry, {
     'vendor': [path.resolve('node_modules/phantom-limb/index.js')]
-  },
+  }),
   output: {
     path: helper.rootNode('./dist'),
     filename: '[name].web.js'
@@ -171,10 +172,7 @@ const webConfig = {
    */
   module: {
     // webpack 2.0 
-    rules: [
-      {{#lint}}
-      ...(config.dev.useEslint ? [createLintingRule()] : []),
-      {{/lint}}
+    rules: {{#lint}}useEslint.concat({{/lint}}[
       {
         test: /\.js$/,
         use: [{
@@ -226,7 +224,7 @@ const webConfig = {
           })
         }]
       }
-    ]
+    ]{{#lint}}){{/lint}}
   },
   /*
    * Add additional plugins to the compiler.
