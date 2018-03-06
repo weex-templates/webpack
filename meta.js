@@ -54,25 +54,25 @@ module.exports = {
     weex: {
       when: 'isNotTest',
       type: 'list',
-      message: 'weex build',
+      message: 'Select weex web render',
       choices: [
-        {
-          name: '0.12.17 LTS: recommended for most users',
-          value: 'lts',
-          short: 'lts',
-        },
         {
           name:
             '1.0.17 Current: latest features',
           value: 'latest',
           short: 'latest',
+        },
+        {
+          name: '0.12.17 LTS: recommended for most users',
+          value: 'lts',
+          short: 'lts',
         }
       ],
     },
     babel: {
       when: 'isNotTest',
       type: 'list',
-      message: 'babel compiler (https://babeljs.io/docs/plugins/#stage-x-experimental-presets)',
+      message: 'Babel compiler (https://babeljs.io/docs/plugins/#stage-x-experimental-presets)',
       choices: [
         {
           name: 'stage-0: recommended for most users, support you to use all es6 syntax',
