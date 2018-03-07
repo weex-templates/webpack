@@ -171,7 +171,7 @@ module.exports = {
 
     sortDependencies(data, green)
 
-    const cwd = path.join(process.cwd(), data.inPlace ? '' : data.destDirName)
+    const cwd = data.dest ? data.dest : path.join(process.cwd(), data.inPlace ? '' : data.destDirName)
 
     if (data.autoInstall) {
       installDependencies(cwd, data.autoInstall, green)
