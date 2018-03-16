@@ -8,7 +8,7 @@
     "start": "npm run serve",
     "build": "webpack --env.NODE_ENV=common",
     "build:prod": "webpack --env.NODE_ENV=production",
-    "build:release": "webpack --env.NODE_ENV=release",
+    "build:prod:web": "webpack --env.NODE_ENV=release",
     "build:plugin": "webpack --env.NODE_ENV=plugin",
     "clean:web": "rimraf ./release/web",
     "clean:ios": "rimraf ./release/ios",
@@ -27,7 +27,7 @@
     "android": "weex run android",
     "pack:ios": "npm run clean:ios && weex build ios",
     "pack:android": "npm run clean:android && weex build android",
-    "pack:web": "npm run clean:web && npm run build:release"
+    "pack:web": "npm run clean:web && npm run build:prod:web"
   },
   "keywords": [
     "weex"
