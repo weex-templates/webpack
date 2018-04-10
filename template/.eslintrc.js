@@ -6,7 +6,10 @@ module.exports = {
     parser: 'babel-eslint'
   },
   env: {
-    browser: true,
+    browser: true
+  },
+  globals: {
+    weex: true
   },
   {{#if_eq lintConfig "standard"}}
   extends: [
