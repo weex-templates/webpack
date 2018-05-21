@@ -16,6 +16,8 @@ const config = {
   {{/unless}}
   templateDir: '.temp',
   entryFilePath: 'entry.js',
+  // Module exclude from compile process
+  excludeModuleReg: /node_modules(?!(\/|\\).*(weex).*)/,
   {{#unless router}}
   // Filter for entry files
   // see: https://www.npmjs.com/package/glob#glob-primer

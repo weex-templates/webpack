@@ -169,7 +169,7 @@ const webConfig = {
         use: [{
           loader: 'babel-loader'
         }],
-        exclude: /node_modules(?!(\/|\\).*(weex).*)/
+        exclude: config.excludeModuleReg
       },
       {
         test: /\.vue(\?[^?]+)?$/,
@@ -213,7 +213,9 @@ const webConfig = {
             {{/if_eq}}
             
           })
-        }]
+        }],
+        ,
+        exclude: config.excludeModuleReg
       }
     ]{{#lint}}){{/lint}}
   },
@@ -252,14 +254,16 @@ const weexConfig = {
         test: /\.js$/,
         use: [{
           loader: 'babel-loader'
-        }]
+        }],
+        exclude: config.excludeModuleReg
       },
       {
         test: /\.vue(\?[^?]+)?$/,
         use: [{
           loader: 'weex-loader',
           options: vueLoaderConfig({useVue: false})
-        }]
+        }],
+        exclude: config.excludeModuleReg
       }
     ]
   },
