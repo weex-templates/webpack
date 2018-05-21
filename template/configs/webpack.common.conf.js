@@ -99,7 +99,7 @@ const getEntryFile = (dir) => {
     const templateFile = path.join(vueWebTemp, basename + '.js');
     fs.outputFileSync(templateFile, getEntryFileContent(templateFile, entry));
     webEntry[basename] = templateFile;
-    weexEntry[basename] = `${entry}?entry=true`;
+    weexEntry[basename] = `${helper.rootNode(entry)}?entry=true`;
   })
 }
 
