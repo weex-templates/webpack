@@ -24,6 +24,7 @@ const config = {
   entryFilter: '**/*.vue',
   // Options for the filter
   // see: https://www.npmjs.com/package/glob#options
+  entryFilterOptions: {},
   {{/unless}}
   dev: {
     // Various Dev Server settings
