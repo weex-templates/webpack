@@ -3,6 +3,7 @@ const fs = require('fs-extra');
 const webpack = require('webpack');
 const config = require('./config');
 const helper = require('./helper');
+const glob = require('glob');
 const vueLoaderConfig = require('./vue-loader.conf');
 const vueWebTemp = helper.rootNode(config.templateDir);
 const hasPluginInstalled = fs.existsSync(helper.rootNode(config.pluginFilePath));
@@ -90,26 +91,16 @@ const getEntryFileContent = (entryPath, vueFilePath) => {
 
 // Retrieve entry file mappings by function recursion
 const getEntryFile = (dir) => {
-  dir = dir || '.';
-  const directory = helper.root(dir);
-  fs.readdirSync(directory).forEach((file) => {
-    const fullpath = path.join(directory, file);
-    const stat = fs.statSync(fullpath);
-    const extname = path.extname(fullpath);
-    if (stat.isFile() && extname === '.vue') {
-      const name = path.join(dir, path.basename(file, extname));
-      if (extname === '.vue') {
-        const entryFile = path.join(vueWebTemp, dir, path.basename(file, extname) + '.js');
-        fs.outputFileSync(entryFile, getEntryFileContent(entryFile, fullpath));
-        webEntry[name] = entryFile;
-      }
-      weexEntry[name] = fullpath + '?entry=true';
-    }
-    else if (stat.isDirectory() && file !== 'build' && file !== 'include') {
-      const subdir = path.join(dir, file);
-      getEntryFile(subdir);
-    }
-  });
+  dir = dir || config.sourceDir;
+  const enrtys = glob.sync(`${dir}/${config.entryFilter}`, config.entryFilterOptions);
+  enrtys.forEach(entry => {
+    const extname = path.extname(entry);
+    const basename = entry.replace(`${dir}/`, '').replace(extname, '');
+    const templateFile = path.join(vueWebTemp, basename + '.js');
+    fs.outputFileSync(templateFile, getEntryFileContent(templateFile, entry));
+    webEntry[basename] = templateFile;
+    weexEntry[basename] = `${entry}?entry=true`;
+  })
 }
 
 // Generate an entry file array before writing a webpack configuration
