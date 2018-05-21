@@ -1,38 +1,27 @@
-## Commands
+# Introduction
 
-### npm start
+This boilerplate is targeted towards large, serious projects and assumes you are somewhat familiar with Webpack and `weex-loader`. 
 
-Starts the development server for you to preview your weex page on browser.
-You can also scan the QR code using weex playground to preview weex page on native.
+## Quickstart
 
-### npm run dev
+To use this template, scaffold a project with [weexpack v1.1.1+](https://github.com/weexteam/weex-pack).
 
-Open the code compilation task in watch mode.
+``` bash
+$ npm install -g weex-toolkit
+$ weex create my-project # default will create the webpack template
+$ cd my-project && npm start
+```
 
-### npm run ios
+## How to use less/sass/pug
 
-(Mac only, requires Xcode)
-Starts the development server and loads your app in an iOS simulator.
+Take `sass` for example:
 
-### npm run android
+```
+$ npm i node-sass sass-loader --save
+```
 
-(Requires Android build tools)
-Starts the development server and loads your app on a connected Android device or emulator.
+Then, you just need to change the `style` tag as: `<style lang="sass"><style>`.
 
-### npm run pack:ios
+## How to create your own template
 
-(Mac only, requires Xcode)
-Packaging ios project into ipa package.
-
-### npm run pack:android
-
-(Requires Android build tools)
-Packaging android project into apk package.
-
-### npm run pack:web
-
-Packaging html5 project into `web/build` folder.
-
-### npm run test
-
-Starts the test runner.
+See [How-to-create-your-own-template](https://github.com/weex-templates/How-to-create-your-own-template).
