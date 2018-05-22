@@ -214,7 +214,6 @@ const webConfig = {
             
           })
         }],
-        ,
         exclude: config.excludeModuleReg
       }
     ]{{#lint}}){{/lint}}
