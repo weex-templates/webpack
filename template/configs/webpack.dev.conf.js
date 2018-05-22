@@ -142,7 +142,7 @@ const devWebpackConfig = webpackMerge(commonConfig[0], {
     : false,
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
-    openPage: openPage,
+    openPage: encodeURI(openPage),
     watchOptions: config.dev.watchOptions
   }
 });
@@ -176,7 +176,7 @@ module.exports = new Promise((resolve, reject) => {
       devWebpackConfig.plugins.push(new FriendlyErrorsPlugin({
         compilationSuccessInfo: {
           messages: [
-            `Your application is running here: ${chalk.yellow(`http://${devWebpackConfig.devServer.host}:${port}/${openPage}`)}\n\nIf the browser does not open automatically, you can manually copy the link to the browser.`
+            `Your application is running here: ${chalk.yellow(`http://${devWebpackConfig.devServer.host}:${port}`)}.`
           ],
         },
         onErrors: config.dev.notifyOnErrors
