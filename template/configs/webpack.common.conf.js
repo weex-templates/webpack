@@ -66,7 +66,7 @@ const getEntryFile = () => {
 const webEntry = getEntryFile();
 {{else}}
 // Wraping the entry file for web.
-const getEntryFileContent = (entryPath, vueFilePath) => {
+const getWebEntryFileContent = (entryPath, vueFilePath) => {
   let relativeVuePath = path.relative(path.join(entryPath, '../'), vueFilePath);
   let relativeEntryPath = helper.root(config.entryFilePath);
   let relativePluginPath = helper.rootNode(config.pluginFilePath);
@@ -84,9 +84,25 @@ const getEntryFileContent = (entryPath, vueFilePath) => {
     entryContents = entryContents.replace(/weex\.init/, match => `${contents}${match}`);
     contents = ''
   }
-  contents += `\nconst App = require('${relativeVuePath}');\n`;
-  contents += `new Vue(Vue.util.extend({el: '#root'}, App));\n`;
+  contents += `
+const App = require('${relativeVuePath}');
+new Vue(Vue.util.extend({el: '#root'}, App));
+`;
   return entryContents + contents;
+}
+
+// Wraping the entry file for native.
+const getNativeEntryFileContent = (entryPath, vueFilePath) => {
+  let relativeVuePath = path.relative(path.join(entryPath, '../'), vueFilePath);
+
+  let contents = '';
+
+  contents += `import App from '${relativeVuePath}'
+App.el = '#root'
+new Vue(App)
+`;
+  
+  return contents;
 }
 
 // Retrieve entry file mappings by function recursion
@@ -96,10 +112,12 @@ const getEntryFile = (dir) => {
   enrtys.forEach(entry => {
     const extname = path.extname(entry);
     const basename = entry.replace(`${dir}/`, '').replace(extname, '');
-    const templateFile = path.join(vueWebTemp, basename + '.js');
-    fs.outputFileSync(templateFile, getEntryFileContent(templateFile, entry));
-    webEntry[basename] = templateFile;
-    weexEntry[basename] = `${helper.rootNode(entry)}?entry=true`;
+    const templatePathForWeb = path.join(vueWebTemp, basename + '.js');
+    const templatePathForNative = path.join(vueWebTemp, basename + '.native.js');
+    fs.outputFileSync(templatePathForWeb, getWebEntryFileContent(templatePathForWeb, entry));
+    fs.outputFileSync(templatePathForNative, getNativeEntryFileContent(templatePathForNative, entry));
+    webEntry[basename] = templatePathForWeb;
+    weexEntry[basename] = templatePathForNative;
   })
 }
 
