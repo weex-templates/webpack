@@ -112,8 +112,8 @@ const getEntryFile = (dir) => {
   enrtys.forEach(entry => {
     const extname = path.extname(entry);
     const basename = entry.replace(`${dir}/`, '').replace(extname, '');
-    const templatePathForWeb = path.join(vueWebTemp, basename + '.js');
-    const templatePathForNative = path.join(vueWebTemp, basename + '.native.js');
+    const templatePathForWeb = path.join(vueWebTemp, basename + '.web.js');
+    const templatePathForNative = path.join(vueWebTemp, basename + '.js');
     fs.outputFileSync(templatePathForWeb, getWebEntryFileContent(templatePathForWeb, entry));
     fs.outputFileSync(templatePathForNative, getNativeEntryFileContent(templatePathForNative, entry));
     webEntry[basename] = templatePathForWeb;
