@@ -94,9 +94,10 @@ new Vue(Vue.util.extend({el: '#root'}, App));
 // Wraping the entry file for native.
 const getNativeEntryFileContent = (entryPath, vueFilePath) => {
   let relativeVuePath = path.relative(path.join(entryPath, '../'), vueFilePath);
-
   let contents = '';
-
+  if (isWin) {
+    relativeVuePath = relativeVuePath.replace(/\\/g, '\\\\');
+  }
   contents += `import App from '${relativeVuePath}'
 App.el = '#root'
 new Vue(App)
