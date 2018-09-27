@@ -12,7 +12,7 @@
 
 <script>
 {{#unless router}}
-import HelloWorld from './components/HelloWorld.vue'
+import HelloWorld from './components/HelloWorld'
 {{/unless}}
 export default {
   name: 'App',{{#router}}{{else}}
