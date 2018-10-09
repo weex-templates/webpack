@@ -109,8 +109,8 @@ new Vue(App)
 // Retrieve entry file mappings by function recursion
 const getEntryFile = (dir) => {
   dir = dir || config.sourceDir;
-  const enrtys = glob.sync(`${dir}/${config.entryFilter}`, config.entryFilterOptions);
-  enrtys.forEach(entry => {
+  const entries = glob.sync(`${dir}/${config.entryFilter}`, config.entryFilterOptions);
+  entries.forEach(entry => {
     const extname = path.extname(entry);
     const basename = entry.replace(`${dir}/`, '').replace(extname, '');
     const templatePathForWeb = path.join(vueWebTemp, basename + '.web.js');
