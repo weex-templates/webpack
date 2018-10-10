@@ -39,8 +39,8 @@
   </div>
   <script>
     (function(){
-      const page = getUrlParam('page');
       const entrys = getUrlParam('entrys');
+      let _wx_tpl = getUrlParam('_wx_tpl');
       function getUrlParam (key) {
         var reg = new RegExp('[?|&]' + key + '=([^&]+)')
         var match = location.search.match(reg)
@@ -49,34 +49,40 @@
       function createQRCode (url) {
         var $QR = document.querySelector('#qrcode')
         var QR = qrcode(0, 'L')
-        url += '?_wx_tpl=' + url
+        // url += '?_wx_tpl=' + url
         $QR.setAttribute('href', url)
         QR.addData(url)
         QR.make()
         $QR.innerHTML = QR.createImgTag(6, 12)
       }
-      if (page) {
+      function getEntryPage(_wx_tpl) {
+        return _wx_tpl.replace(/http:\/\/\S+?\//g, '').replace(/\.js$/, '');
+      }
+      if (!_wx_tpl) {
+        _wx_tpl = `${location.origin}/dist/index.js`;
+      }
+      if (_wx_tpl) {
         var $preview = document.querySelector('#preview')
         var $webPageLink = document.querySelector('.web-page-link')
-        $preview.src = `/${page.replace('.js', '.html')}`;
-        $webPageLink.setAttribute('href', `/${page.replace('.js', '.html')}`);
+        $preview.src = `/index.html?_wx_tpl=${_wx_tpl}`;
+        $webPageLink.setAttribute('href', `/index.html?_wx_tpl=${_wx_tpl}`);
       }
       if (entrys) {
         var pageEntrys = decodeURI(entrys).replace('\\', '/').split('|');
         var $pages = document.querySelector('.pages-box');
         var contents = '';
         pageEntrys.forEach(function(entry){
-          if (entry === getUrlParam('page').replace('.js', '')) {
-            contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item active">${entry}</a>`
+          if (`dist/${entry}` === getEntryPage(_wx_tpl)) {
+            contents += `<a href="?entrys=${entrys}&_wx_tpl=${location.origin}/dist/${entry}.js" class="page-item active">${entry}</a>`
           }
           else {
-            contents += `<a href="?page=${entry}.js&entrys=${entrys}" class="page-item">${entry}</a>`
+            contents += `<a href="?entrys=${entrys}&_wx_tpl=${location.origin}/dist/${entry}.js" class="page-item">${entry}</a>`
           }
         })
         $pages.innerHTML = contents;
       }
       var host = window.location.host;
-      createQRCode(`http://${host}/dist/${page || 'index.js'}`)
+      createQRCode(_wx_tpl)
     })();
   </script>
 </body>
