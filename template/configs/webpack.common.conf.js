@@ -162,8 +162,8 @@ const webConfig = {
     'vendor': [path.resolve('node_modules/phantom-limb/index.js')]
   }),
   output: {
-    path: helper.rootNode('./dist'),
-    filename: '[name].web.js'
+    path: helper.rootNode('.'),
+    filename: 'dist/[name].web.js'
   },
   /**
    * Options affecting the resolving of modules.
