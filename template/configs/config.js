@@ -12,7 +12,7 @@ const config = {
   {{/router}}
   // common
   {{#unless router}}
-  sourceDir: 'src',
+  sourceDir: process.env.NODE_SOURCE_DIR || 'src',
   {{/unless}}
   templateDir: '.temp',
   entryFilePath: 'entry.js',
@@ -21,10 +21,10 @@ const config = {
   {{#unless router}}
   // Filter for entry files
   // see: https://www.npmjs.com/package/glob#glob-primer
-  entryFilter: '**/*.vue',
+  entryFilter: process.env.NODE_ENTRY_RILTER || '**/*.vue',
   // Options for the filter
   // see: https://www.npmjs.com/package/glob#options
-  entryFilterOptions: {},
+  entryFilterOptions: process.env.NODE_ENTRY_RILTER_OPTIONS || {},
   {{/unless}}
   dev: {
     // Various Dev Server settings
@@ -32,9 +32,9 @@ const config = {
     host: ip,
     port: 8081,
     historyApiFallback: true,
-    open: true,
+    open: !process.env.NODE_NOT_OPEN,
     watchContentBase: true,
-    openPage: 'web/preview.html',
+    openPage: process.env.NODE_OPEN_PAGE || 'web/preview.html',
     watchOptions: {
       ignored: /node_modules/,
       aggregateTimeout: 300,

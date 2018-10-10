@@ -22,45 +22,19 @@ const helper = require('./helper');
  * Modify the url that will open on the browser.
  * @param {Array} entry 
  */
-const postMessageToOpenPage =  (entry) => {
+const postMessageToOpenPage =  (entry, ip, port) => {
   let entrys = Object.keys(entry);
   let openpage = config.dev.openPage;
   // exclude vendor entry.
   entrys = entrys.filter(entry => entry !== 'vendor' );
   if(entrys.indexOf('index') > -1) {
-    openpage += `?page=index.js`;
+    openpage += `?_wx_tpl=http://${ip}:${port}/dist/index.js`;
   }
   else {
-    openpage += `?page=${entrys[0]}.js`;
+    openpage += `?_wx_tpl=http://${ip}:${port}/dist/${entrys[0]}.js`;
   }
-  if(entrys.length > 1) {
-    openpage += `&entrys=${entrys.join('|')}`
-  }
+  
   return openpage;
-}
-
-const openPage = postMessageToOpenPage(commonConfig[0].entry);
-
-/**
- * Generate multiple entrys
- * @param {Array} entry 
- */
-const generateHtmlWebpackPlugin = (entry) => {
-  let entrys = Object.keys(entry);
-  // exclude vendor entry.
-  entrys = entrys.filter(entry => entry !== 'vendor' );
-  const htmlPlugin = entrys.map(name => {
-    return new HtmlWebpackPlugin({
-      filename: name + '.html',
-      template: helper.rootNode(`web/index.html`),
-      isDevServer: true,
-      chunksSortMode: 'dependency',
-      inject: true,
-      devScripts: config.dev.htmlOptions.devScripts,
-      chunks: ['vendor', name]
-    })
-  })
-  return htmlPlugin;
 }
 
 /**
@@ -107,7 +81,16 @@ const devWebpackConfig = webpackMerge(commonConfig[0], {
      *
      * See: https://github.com/ampedandwired/html-webpack-plugin
      */
-    ...generateHtmlWebpackPlugin(commonConfig[0].entry),
+    new HtmlWebpackPlugin({
+      multihtmlCache: true,
+      filename: 'index.html',
+      template: helper.rootNode(`web/index.html`),
+      isDevServer: true,
+      chunksSortMode: 'dependency',
+      inject: true,
+      devScripts: config.dev.htmlOptions.devScripts,
+      chunks: ['vendor']
+    }),
     /*
      * Plugin: ScriptExtHtmlWebpackPlugin
      * Description: Enhances html-webpack-plugin functionality
@@ -142,7 +125,7 @@ const devWebpackConfig = webpackMerge(commonConfig[0], {
     : false,
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
-    openPage: encodeURI(openPage),
+    // openPage: encodeURI(openPage),
     watchOptions: config.dev.watchOptions
   }
 });
@@ -183,7 +166,8 @@ module.exports = new Promise((resolve, reject) => {
         ? utils.createNotifierCallback()
         : undefined
       }))
-
+      const openPage = postMessageToOpenPage(commonConfig[0].entry, ip, port);
+      devWebpackConfig.devServer.openPage = encodeURI(openPage)
       resolve(devWebpackConfig)
     }
   })

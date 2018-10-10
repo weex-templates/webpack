@@ -278,7 +278,7 @@ const weexConfig = {
       {
         test: /\.vue(\?[^?]+)?$/,
         use: [{
-          loader: 'weex-loader',
+          loader: 'weex-vue-loader',
           options: vueLoaderConfig({useVue: false})
         }],
         exclude: config.excludeModuleReg
