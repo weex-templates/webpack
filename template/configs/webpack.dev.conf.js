@@ -27,13 +27,16 @@ const postMessageToOpenPage =  (entry, ip, port) => {
   let openpage = config.dev.openPage;
   // exclude vendor entry.
   entrys = entrys.filter(entry => entry !== 'vendor' );
-  if(entrys.indexOf('index') > -1) {
-    openpage += `?_wx_tpl=http://${ip}:${port}/dist/index.js`;
+  let entryIndex = 0;
+  entrys.forEach((entry, index) => {
+    if (entry.includes('index')) {
+      entryIndex = index
+    }
+  });
+  openpage += `?_wx_tpl=http://${ip}:${port}/dist/${entrys[entryIndex]}.js`;
+  if(entrys.length > 1) {
+    openpage += `&entrys=${entrys.join('|')}`
   }
-  else {
-    openpage += `?_wx_tpl=http://${ip}:${port}/dist/${entrys[0]}.js`;
-  }
-  
   return openpage;
 }
 
@@ -125,7 +128,6 @@ const devWebpackConfig = webpackMerge(commonConfig[0], {
     : false,
     proxy: config.dev.proxyTable,
     quiet: true, // necessary for FriendlyErrorsPlugin
-    // openPage: encodeURI(openPage),
     watchOptions: config.dev.watchOptions
   }
 });
