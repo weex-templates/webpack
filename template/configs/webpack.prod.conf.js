@@ -21,8 +21,6 @@ const weexConfig = webpackMerge(commonConfig[1], {
      * See: http://webpack.github.io/docs/configuration.html#plugins
      */
     plugins: [
-      // Need to run uglify first, then pipe other webpack plugins
-      ...commonConfig[1].plugins,
       /**
        * Plugin: webpack.DefinePlugin
        * Description: The DefinePlugin allows you to create global constants which can be configured at compile time. 
@@ -49,7 +47,9 @@ const weexConfig = webpackMerge(commonConfig[1], {
           drop_console: true,
           drop_debugger: true
         }
-      })
+      }),
+      // Need to run uglify first, then pipe other webpack plugins
+      ...commonConfig[1].plugins
     ]
 })
 
