@@ -40,16 +40,17 @@
   <script>
     (function(){
       const page = getUrlParam('page');
+      const wsport = getUrlParam('wsport');
       const entrys = getUrlParam('entrys');
       function getUrlParam (key) {
         var reg = new RegExp('[?|&]' + key + '=([^&]+)')
         var match = location.search.match(reg)
         return match && match[1]
       }
-      function createQRCode (url) {
+      function createQRCode (url, wsport) {
         var $QR = document.querySelector('#qrcode')
         var QR = qrcode(0, 'L')
-        url += '?_wx_tpl=' + url
+        url += `${wsport ? `?wsport=${wsport}&`: '?'}_wx_tpl=${url}`
         $QR.setAttribute('href', url)
         QR.addData(url)
         QR.make()
@@ -76,7 +77,7 @@
         $pages.innerHTML = contents;
       }
       var host = window.location.host;
-      createQRCode(`http://${host}/dist/${page || 'index.js'}`)
+      createQRCode(`http://${host}/dist/${page || 'index.js'}`, wsport)
     })();
   </script>
 </body>
