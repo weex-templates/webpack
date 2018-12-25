@@ -21,17 +21,6 @@ const weexConfig = webpackMerge(commonConfig[1], {
      * See: http://webpack.github.io/docs/configuration.html#plugins
      */
     plugins: [
-      /**
-       * Plugin: webpack.DefinePlugin
-       * Description: The DefinePlugin allows you to create global constants which can be configured at compile time. 
-       *
-       * See: https://webpack.js.org/plugins/define-plugin/
-       */
-      new webpack.DefinePlugin({
-        'process.env': {
-          'NODE_ENV': config.prod.env
-        }
-      }),
       /*
        * Plugin: UglifyJsparallelPlugin
        * Description: Identical to standard uglify webpack plugin
@@ -49,7 +38,18 @@ const weexConfig = webpackMerge(commonConfig[1], {
         }
       }),
       // Need to run uglify first, then pipe other webpack plugins
-      ...commonConfig[1].plugins
+      ...commonConfig[1].plugins,
+      /**
+       * Plugin: webpack.DefinePlugin
+       * Description: The DefinePlugin allows you to create global constants which can be configured at compile time. 
+       *
+       * See: https://webpack.js.org/plugins/define-plugin/
+       */
+      new webpack.DefinePlugin({
+        'process.env': {
+          'NODE_ENV': config.prod.env
+        }
+      })
     ]
 })
 
