@@ -4,7 +4,7 @@ import HelloWorld from '@/components/HelloWorld'
 
 Vue.use(Router)
 
-module.exports = new Router({
+export const router = new Router({
   routes: [
     {
       path: '/',
