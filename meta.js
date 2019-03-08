@@ -18,13 +18,19 @@ module.exports = {
     // When running tests for the template, this adds answers for the selected scenario
     before: addTestAnswers
   },
+
   helpers: {
+    unless_eq(v1, v2, options) {
+      return v1 !== v2 ? options.fn(this) : options.inverse(this);
+    },
+    if_eq(v1, v2, options) {
+      return v1 === v2 ? options.fn(this) : options.inverse(this);
+    },
     if_or(v1, v2, options) {
 
       if (v1 || v2) {
         return options.fn(this)
       }
-      console.log(Object.keys(options))
       return options.inverse(this)
     },
     template_version() {
