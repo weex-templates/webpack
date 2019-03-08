@@ -19,12 +19,16 @@ module.exports = {
     before: addTestAnswers
   },
   helpers: {
+    unless_eq(v1, v2, options) {
+      return v1 !== v2 ? options.fn(this) : options.inverse(this);
+    },
+    if_eq(v1, v2, options) {
+      return v1 === v2 ? options.fn(this) : options.inverse(this);
+    },
     if_or(v1, v2, options) {
-
       if (v1 || v2) {
         return options.fn(this)
       }
-      console.log(Object.keys(options))
       return options.inverse(this)
     },
     template_version() {
